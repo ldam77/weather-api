@@ -1,3 +1,4 @@
+// weather api call using ajax
 // $(document).ready(function() {
 //   $('#weatherLocation').click(function() {
 //     let city = $('#location').val();
@@ -20,27 +21,42 @@
 //   });
 // });
 
+// weather api call using jquery get and then. Get is shorthand ajax for get, then is jquery promise function
 $(document).ready(function() {
   $('#weatherLocation').click(function() {
     let city = $('#location').val();
     $('#location').val("");
-
-    let request = new XMLHttpRequest();
-    let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_KEY}`;
-    let getElements = function(response) {
+    $.get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_KEY}`).then(function(response) {
       $('.showHumidity').text(`The humidity in ${city} is ${response.main.humidity}%`);
       $('.showTemp').text(`The temperature in Kelvins is ${response.main.temp} degrees.`);
-    }
-
-    request.onreadystatechange = function() {
-      if (this.readyState === 4 && this.status === 200) {
-        let response = JSON.parse(this.responseText);
-        getElements(response);
-      }
-    }
-
-    request.open("GET", url, true);
-    request.send();
-
+    }).fail(function(error) {
+      $('.showErrors').text(`There was an error processing your request: ${error.responseText}. Please try again.`);
+    });
   });
 });
+
+// weather api call using XMLHttpRequest
+// $(document).ready(function() {
+//   $('#weatherLocation').click(function() {
+//     let city = $('#location').val();
+//     $('#location').val("");
+//
+//     let request = new XMLHttpRequest();
+//     let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_KEY}`;
+//     let getElements = function(response) {
+//       $('.showHumidity').text(`The humidity in ${city} is ${response.main.humidity}%`);
+//       $('.showTemp').text(`The temperature in Kelvins is ${response.main.temp} degrees.`);
+//     }
+//
+//     request.onreadystatechange = function() {
+//       if (this.readyState === 4 && this.status === 200) {
+//         let response = JSON.parse(this.responseText);
+//         getElements(response);
+//       }
+//     }
+//
+//     request.open("GET", url, true);
+//     request.send();
+//
+//   });
+// });
